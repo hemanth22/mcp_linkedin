@@ -1,0 +1,4 @@
+fastmcp
+httpx
+beautifulsoup4
+ddgs
