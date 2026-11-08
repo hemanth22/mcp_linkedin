@@ -104,6 +104,7 @@ This opens the MCP Inspector, where you can call each tool by hand. It needs Nod
 - "Search for the latest Site Reliability Engineer jobs posted in the last hour."
 - "Find Site Reliability Engineer jobs in India where posted_text is '1 hour ago'." (uses `exact_one_hour=true`)
 - "Any remote SRE jobs posted in the last hour? Show details for the first one."
+- "Use search_latest_jobs to find the newest 'AI Ops' jobs in india posted within the last . Summarise the top results in a table (title, company, location, posted_text, url)."  
 
 ## Limitations
 
