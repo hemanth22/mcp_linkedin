@@ -20,3 +20,15 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 py-modules = ["main"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 130
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]

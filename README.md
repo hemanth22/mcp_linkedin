@@ -61,11 +61,12 @@ Pass a result's `job_id` to `get_job_details` to read the full description.
 
 ## Setup
 
-Requires Python 3.10+. There are two ways to run the server:
+Requires Python 3.10+. There are two ways to install the server:
 
-- **Straight from GitHub with [uv](https://docs.astral.sh/uv/)** (recommended). Nothing to clone or install by hand:
+- **With pip, straight from GitHub** (recommended):
   ```bash
-  uvx --from git+https://github.com/hemanth22/mcp_linkedin linkedin-jobs
+  pip install git+https://github.com/hemanth22/mcp_linkedin
+  python -m main
   ```
 - **From a clone:**
   ```bash
@@ -75,21 +76,23 @@ Requires Python 3.10+. There are two ways to run the server:
   python main.py
   ```
 
-The client configs below use the `uvx` form. To use a clone instead, replace the command with `python` and the args with the full path to `main.py`.
+The client configs below run `python -m main`, which works after the pip install. To use a clone instead, replace the args with the full path to `main.py`.
+
+If the client can't find the server, it may be using a different Python from the one you installed into. Set `command` to that Python's full path, which `python -c "import sys; print(sys.executable)"` prints.
 
 ### Transports
 
 | Mode | Command | Used by |
 |------|---------|---------|
-| stdio (default) | `linkedin-jobs` | Claude Code, Claude Desktop, VS Code, Antigravity |
-| Streamable HTTP | `linkedin-jobs --transport http --port 8000` | ChatGPT, claude.ai custom connectors |
+| stdio (default) | `python -m main` | Claude Code, Claude Desktop, VS Code, Antigravity |
+| Streamable HTTP | `python -m main --transport http --port 8000` | ChatGPT, claude.ai custom connectors |
 
 In HTTP mode the endpoint is `http://<host>:<port>/mcp`. The options can also be set with the `MCP_TRANSPORT`, `HOST` and `PORT` environment variables.
 
 ### Claude Code
 
 ```bash
-claude mcp add linkedin-jobs -- uvx --from git+https://github.com/hemanth22/mcp_linkedin linkedin-jobs
+claude mcp add linkedin-jobs -- python -m main
 ```
 
 Inside a clone of this repo, Claude Code also picks up the bundled `.mcp.json` automatically.
@@ -102,8 +105,8 @@ Go to Settings → Developer → Edit Config and add:
 {
   "mcpServers": {
     "linkedin-jobs": {
-      "command": "uvx",
-      "args": ["--from", "git+https://github.com/hemanth22/mcp_linkedin", "linkedin-jobs"]
+      "command": "python",
+      "args": ["-m", "main"]
     }
   }
 }
@@ -120,8 +123,8 @@ Add to `.vscode/mcp.json`, or run **MCP: Open User Configuration** to make it av
   "servers": {
     "linkedin-jobs": {
       "type": "stdio",
-      "command": "uvx",
-      "args": ["--from", "git+https://github.com/hemanth22/mcp_linkedin", "linkedin-jobs"]
+      "command": "python",
+      "args": ["-m", "main"]
     }
   }
 }
@@ -137,8 +140,8 @@ In the Agent panel, open **⋯ → MCP Servers → Manage MCP Servers → View r
 {
   "mcpServers": {
     "linkedin-jobs": {
-      "command": "uvx",
-      "args": ["--from", "git+https://github.com/hemanth22/mcp_linkedin", "linkedin-jobs"]
+      "command": "python",
+      "args": ["-m", "main"]
     }
   }
 }
