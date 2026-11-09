@@ -10,8 +10,6 @@ on:
         description: "Also run the live LinkedIn test"
         type: boolean
         default: false
-  schedule:
-    - cron: "0 6 * * 1" # weekly live check: catches LinkedIn HTML changes
 
 permissions:
   contents: read
@@ -63,7 +61,7 @@ jobs:
 
   live:
     name: Live LinkedIn test
-    if: github.event_name == 'schedule' || inputs.live
+    if: inputs.live
     runs-on: ubuntu-latest
     continue-on-error: true # LinkedIn may block runner IPs
     steps:
