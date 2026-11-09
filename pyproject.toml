@@ -1,0 +1,22 @@
+[project]
+name = "linkedin-jobs-mcp"
+version = "0.1.0"
+description = "FastMCP server for the latest public LinkedIn job posts"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastmcp",
+    "httpx",
+    "beautifulsoup4",
+    "ddgs",
+]
+
+[project.scripts]
+linkedin-jobs = "main:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["main"]

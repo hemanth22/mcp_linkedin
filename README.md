@@ -61,32 +61,100 @@ Pass a result's `job_id` to `get_job_details` to read the full description.
 
 ## Setup
 
-Requires Python 3.10+.
+Requires Python 3.10+. There are two ways to run the server:
+
+- **Straight from GitHub with [uv](https://docs.astral.sh/uv/)** (recommended). Nothing to clone or install by hand:
+  ```bash
+  uvx --from git+https://github.com/hemanth22/mcp_linkedin linkedin-jobs
+  ```
+- **From a clone:**
+  ```bash
+  git clone https://github.com/hemanth22/mcp_linkedin.git
+  cd mcp_linkedin
+  pip install -r requirements.txt
+  python main.py
+  ```
+
+The client configs below use the `uvx` form. To use a clone instead, replace the command with `python` and the args with the full path to `main.py`.
+
+### Transports
+
+| Mode | Command | Used by |
+|------|---------|---------|
+| stdio (default) | `linkedin-jobs` | Claude Code, Claude Desktop, VS Code, Antigravity |
+| Streamable HTTP | `linkedin-jobs --transport http --port 8000` | ChatGPT, claude.ai custom connectors |
+
+In HTTP mode the endpoint is `http://<host>:<port>/mcp`. The options can also be set with the `MCP_TRANSPORT`, `HOST` and `PORT` environment variables.
+
+### Claude Code
 
 ```bash
-pip install -r requirements.txt
+claude mcp add linkedin-jobs -- uvx --from git+https://github.com/hemanth22/mcp_linkedin linkedin-jobs
 ```
 
-### Register with Claude Code
+Inside a clone of this repo, Claude Code also picks up the bundled `.mcp.json` automatically.
 
-```bash
-claude mcp add linkedin-jobs -- python C:\Users\hemanth\mcp_linkedin\main.py
-```
+### Claude Desktop
 
-### Register with Claude Desktop
-
-Add to `claude_desktop_config.json`:
+Go to Settings → Developer → Edit Config and add:
 
 ```json
 {
   "mcpServers": {
     "linkedin-jobs": {
-      "command": "python",
-      "args": ["C:\\Users\\hemanth\\mcp_linkedin\\main.py"]
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/hemanth22/mcp_linkedin", "linkedin-jobs"]
     }
   }
 }
 ```
+
+Restart Claude Desktop afterwards.
+
+### VS Code (GitHub Copilot agent mode)
+
+Add to `.vscode/mcp.json`, or run **MCP: Open User Configuration** to make it available in all workspaces:
+
+```json
+{
+  "servers": {
+    "linkedin-jobs": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/hemanth22/mcp_linkedin", "linkedin-jobs"]
+    }
+  }
+}
+```
+
+Click **Start** above the entry, then use Copilot Chat in **Agent** mode.
+
+### Antigravity
+
+In the Agent panel, open **⋯ → MCP Servers → Manage MCP Servers → View raw config** (`~/.gemini/antigravity/mcp_config.json`) and add:
+
+```json
+{
+  "mcpServers": {
+    "linkedin-jobs": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/hemanth22/mcp_linkedin", "linkedin-jobs"]
+    }
+  }
+}
+```
+
+Save the file, then click **Refresh**.
+
+### ChatGPT and claude.ai (remote connectors)
+
+These clients can only reach servers on a public HTTPS URL.
+
+1. Run the server in HTTP mode somewhere public. Either deploy this repo to a host such as Render, Railway, Fly.io or Cloud Run with the start command `python main.py --transport http` (they set `PORT` for you), or test locally with `python main.py --transport http` plus a tunnel like `ngrok http 8000`.
+2. **ChatGPT:** go to Settings → Apps & Connectors → Advanced settings, turn on **Developer mode**, then **Create** a connector with the URL `https://<your-host>/mcp` and no authentication.
+3. **claude.ai:** go to Settings → Connectors → **Add custom connector** and paste the same URL.
+
+> **Warning:** the HTTP server has no authentication. Anyone with the URL can call it and use up your LinkedIn and DuckDuckGo rate limits. Keep the URL private, or take it down when you're done.
 
 ### Try it without a client
 

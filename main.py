@@ -265,5 +265,34 @@ def job_deep_dive(job_id: str) -> str:
     )
 
 
+def main() -> None:
+    """Run the server.
+
+    stdio (default) is for local clients such as Claude Desktop, Claude Code,
+    VS Code and Antigravity. http serves Streamable HTTP at /mcp for remote
+    clients such as ChatGPT and claude.ai custom connectors.
+
+    Each option can also be set by environment variable: MCP_TRANSPORT,
+    HOST, PORT. Hosting platforms usually set PORT for you.
+    """
+    import argparse
+    import os
+
+    parser = argparse.ArgumentParser(description="LinkedIn Jobs MCP server")
+    parser.add_argument(
+        "--transport",
+        choices=["stdio", "http"],
+        default=os.environ.get("MCP_TRANSPORT", "stdio"),
+    )
+    parser.add_argument("--host", default=os.environ.get("HOST", "0.0.0.0"))
+    parser.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8000")))
+    args = parser.parse_args()
+
+    if args.transport == "http":
+        mcp.run(transport="http", host=args.host, port=args.port)
+    else:
+        mcp.run()
+
+
 if __name__ == "__main__":
-    mcp.run()
+    main()

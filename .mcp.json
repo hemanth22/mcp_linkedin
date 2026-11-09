@@ -2,7 +2,7 @@
   "mcpServers": {
     "linkedin-jobs": {
       "command": "python",
-      "args": ["C:\\Users\\hemanth\\mcp_linkedin\\main.py"]
+      "args": ["main.py"]
     }
   }
 }
